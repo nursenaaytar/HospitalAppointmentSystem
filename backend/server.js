@@ -10,14 +10,11 @@ app.listen(3000);
 
 // User
 app.post("/user/create", async (req, res) => {
-  console.log("***********************************************************************************")
   try {
-    const user = await User.create(req.body);
-    res.status(200).json(user);
+    await User.create(req.body);
+    res.status(200).json({statu :200 , isSuccessful : true , message :""});
   } catch (err) {
-    console.log(err)
-    console.log(err.message);
-    res.status(500).json({ message: err.message });
+    res.status(400).json({ statu: 400, isSuccessful: false,  message: err.message });
   }
 });
 

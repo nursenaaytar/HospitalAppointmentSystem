@@ -34,7 +34,7 @@ const user = mongoose.Schema({
     gender: {
         type: String,
         required: [true, "Lütfen bir cinsiyet belirtiniz"],
-        enum: ["Erkek", "Kadın"]
+        enum: ["Erkek", "Kadin"]
     },
     role: {
         type: String,

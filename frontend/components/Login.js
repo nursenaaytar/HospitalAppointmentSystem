@@ -37,7 +37,10 @@ const Login = () => {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="padding">
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
       <View>
         <Text style={{ fontSize: 20, marginBottom: 30, color: "#0782F9" }}>
           Giriş Yap
