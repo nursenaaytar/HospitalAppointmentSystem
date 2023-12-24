@@ -1,14 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, FlatList, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { API_BASE_ADRESS } from '../constants/config';
 import { FontAwesome } from '@expo/vector-icons'; 
+import { useFocusEffect } from '@react-navigation/native';
 
 export function UserSettings() {
   const [users, setUsers] = useState([]);
   const navigation = useNavigation();
 
+  useFocusEffect( // geçişlerde refresh
+    useCallback(() => {
+      getUsers();
+    }, [])
+  );
+
   const getUsers = async () => {
+    console.log("deneme");
     try {
       const response = await fetch(API_BASE_ADRESS + "/user/getall/", {
         method: "GET",
@@ -19,7 +27,7 @@ export function UserSettings() {
 
       const result = await response.json();
       if (result.isSuccessful) {
-        setUsers(result.users);
+        setUsers(prevUsers => [ ... result.users]);
       } else {
         console.log("Hata Oluştu:", result.message);
       }
@@ -30,7 +38,7 @@ export function UserSettings() {
 
   useEffect(() => {
     getUsers();
-  }, [users]); 
+  }, []); 
 
   const handleUserDetail = (user) => {
     navigation.navigate('UserDetail', { screenTitle : "Kullanıcı Düzenle",  user });

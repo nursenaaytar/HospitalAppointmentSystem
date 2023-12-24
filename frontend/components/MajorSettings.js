@@ -1,12 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, FlatList, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { API_BASE_ADRESS } from '../constants/config';
 import { FontAwesome } from '@expo/vector-icons'; 
+import { useFocusEffect } from '@react-navigation/native';
 
 export function MajorSettings() {
   const [majors, setMajors] = useState([]);
   const navigation = useNavigation();
+
+  useFocusEffect( // geçişlerde refresh
+  useCallback(() => {
+    getMajors();
+  }, [])
+);
 
   const getMajors = async () => {
     try {

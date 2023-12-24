@@ -1,14 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, FlatList, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { API_BASE_ADRESS } from '../constants/config';
 import { FontAwesome } from '@expo/vector-icons'; 
+import { useFocusEffect } from '@react-navigation/native';
 
 export function HospitalSettings() {
   const [hospitals, setHospitals] = useState([]);
   const navigation = useNavigation();
 
+
+  useFocusEffect( // geçişlerde refresh
+  useCallback(() => {
+    getHospitals();
+  }, [])
+);
+
   const getHospitals = async () => {
+    console.log("deneme2");
     try {
       const response = await fetch(API_BASE_ADRESS + "/hospital/getall/", {
         method: "GET",
@@ -19,7 +28,7 @@ export function HospitalSettings() {
 
       const result = await response.json();
       if (result.isSuccessful) {
-        setHospitals(result.hospitals);
+        setHospitals(prevHospitals => [...result.hospitals]); // Güncelleme
       } else {
         console.log("Hata Oluştu:", result.message);
       }
@@ -30,7 +39,7 @@ export function HospitalSettings() {
 
   useEffect(() => {
     getHospitals();
-  }, [hospitals]); 
+  }, []); 
 
   const handleAddHospital = () => {
 

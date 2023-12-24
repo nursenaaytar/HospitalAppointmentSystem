@@ -337,17 +337,17 @@ app.post("/doctor/create", async (req, res) => {
 
     const userExists = await User.findById(userId);
     if (!userExists) {
-      return res.status(400).json({ error: "Geçersiz kullanıcı ID'si" });
+      return res.status(400).json({ status: 400, isSuccessful: false, message: "Geçersiz kullanıcı ID'si" });
     }
 
     const majorExists = await Major.findById(majorId);
     if (!majorExists) {
-      return res.status(400).json({ error: "Geçersiz ana bilim dalı ID'si" });
+      return res.status(400).json({status: 400, isSuccessful: false,  message: "Geçersiz ana bilim dalı ID'si" });
     }
 
     const hospitalExists = await Hospital.findById(hospitalId);
     if (!hospitalExists) {
-      return res.status(400).json({ error: "Geçersiz hastane ID'si" });
+      return res.status(400).json({status: 400, isSuccessful: false, message: "Geçersiz hastane ID'si" });
     }
 
     const newDoctor = new Doctor({
@@ -359,6 +359,76 @@ app.post("/doctor/create", async (req, res) => {
     const savedDoctor = await newDoctor.save();
 
     res.json(savedDoctor);
+  } catch (error) {
+    res.status(500).json({ status: 500, isSuccessful: false, message: error.message });
+  }
+});
+
+app.put("/doctor/update/:doctorId", async (req, res) => {
+  try {
+    const { userId, majorId, hospitalId } = req.body;
+    const { doctorId } = req.params;
+    console.log(req);
+    const doctorExists = await Doctor.findById(doctorId);
+    if (!doctorExists) {
+      return res.status(404).json({status: 404, isSuccessful: false, message: "Doktor bulunamadı" });
+    }
+
+    const userExists = await User.findById(userId);
+    if (!userExists) {
+      return res.status(400).json({status: 400, isSuccessful: false, message: "Geçersiz kullanıcı ID'si" });
+    }
+
+    const majorExists = await Major.findById(majorId);
+    if (!majorExists) {
+      return res.status(400).json({ status: 400, isSuccessful: false, message: "Geçersiz ana bilim dalı ID'si" });
+    }
+
+    const hospitalExists = await Hospital.findById(hospitalId);
+    if (!hospitalExists) {
+      return res.status(400).json({status: 400, isSuccessful: false, message: "Geçersiz hastane ID'si" });
+    }
+
+    const updatedDoctor = await Doctor.findByIdAndUpdate(
+      doctorId,
+      { userId, majorId, hospitalId },
+      { new: true } 
+    );
+
+    res.status(200).json(updatedDoctor);
+  } catch (error) {
+    res.status(500).json({status: 500, isSuccessful: false, message: error.message });
+  }
+});
+
+app.delete("/doctor/delete/:doctorId", async (req, res) => {
+  try {
+    const { doctorId } = req.params;
+
+    const doctorExists = await Doctor.findById(doctorId);
+    if (!doctorExists) {
+      return res.status(404).json({status: 400, isSuccessful: false, error: "Doktor bulunamadı" });
+    }
+
+    await Doctor.findByIdAndDelete(doctorId);
+
+    res.status(200).json({status: 200, isSuccessful: true, message: "Doktor başarıyla silindi" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/doctor/check/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const doctor = await Doctor.findOne({ userId });
+
+    if (doctor) {
+      res.status(200).json({ status: 200, isSuccessful: true, doctor });
+    } else {
+      res.status(404).json({ error: "Doktor bulunamadı" });
+    }
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
