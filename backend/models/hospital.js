@@ -3,8 +3,9 @@ const mongoose = require('mongoose')
 const hospital = mongoose.Schema({
     name: {
         type: String,
-        required: [true, "Please enter a hospital name"],
-        maxLength: 100
+        required: [true, "Lütfen hastane adı giriniz"],
+        maxLength: 100,
+        unique: true,
     }
 })
 

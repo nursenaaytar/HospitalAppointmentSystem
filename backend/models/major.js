@@ -3,8 +3,9 @@ const mongoose = require('mongoose')
 const major = mongoose.Schema({
     name: {
         type: String,
-        required: [true, "Please enter a major name"],
-        maxLength: 100
+        required: [true, "Lütfen ana bilim dalı adı giriniz"],
+        maxLength: 100,
+        unique: true
     }
 })
 

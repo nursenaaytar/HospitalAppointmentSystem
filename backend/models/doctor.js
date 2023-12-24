@@ -3,15 +3,15 @@ const mongoose = require('mongoose')
 const doctor = mongoose.Schema({
     userId : {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user',
+        ref: 'users',
     },
     majorId : {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'major',
+        ref: 'majors',
     },
     hospitalId : {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'hospital',
+        ref: 'hospitals',
     }
 })
 

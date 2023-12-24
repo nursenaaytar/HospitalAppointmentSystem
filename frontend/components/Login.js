@@ -9,10 +9,12 @@ import {
   View,
 } from "react-native";
 import { auth } from "../auth/Firebase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API_BASE_ADRESS } from "../constants/config";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("mys@hotmail.com");
+  const [password, setPassword] = useState("123123");
 
   const navigation = useNavigation();
 
@@ -26,12 +28,39 @@ const Login = () => {
     return unsubscribe;
   }, []);
 
-  const handleLogin = () => {
-    auth
+  const getUserByEmail = async (email) => {
+    try {
+      const response = await fetch(API_BASE_ADRESS + "/user/get/" + email, {
+        mode: "no-cors",
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+        },
+      });
+  
+      const result = await response.json();
+  
+      if (result.isSuccessful) {
+        console.log(JSON.stringify(result.user));
+        await AsyncStorage.setItem("name", JSON.stringify(result.user.name));
+        await AsyncStorage.setItem("surname", JSON.stringify(result.user.surname));
+        await AsyncStorage.setItem("email", JSON.stringify(result.user.email));
+        await AsyncStorage.setItem("role", JSON.stringify(result.user.role));
+      } else {
+        Alert.alert("Hata Oluştu:", result.message);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+  
+  const handleLogin =  () => {
+     auth
       .signInWithEmailAndPassword(email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
         console.log("Logged in with:", user.email);
+         getUserByEmail(user.email);
       })
       .catch((error) => alert(error.message));
   };

@@ -3,17 +3,12 @@ import { StyleSheet, Text, View, Button, LogoTitle } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Home } from "./components/Home";
-import { FontAwesome } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { History } from "./components/History";
-import { Appointment } from "./components/Appointment";
-import { Profile, Settings } from "./components/Settings";
-import { Ionicons } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import { Tabs } from "./components/Tabs";
+import {HospitalDetail} from "./components/HospitalDetail";
+import { MajorDetail } from "./components/MajorDetail";
+import { UserDetail } from "./components/UserDetail";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -35,6 +30,9 @@ export default function App() {
           name="Tabs"
           component={Tabs}
         />
+        <Stack.Screen name="HospitalDetail" component={HospitalDetail} />
+        <Stack.Screen name="MajorDetail" component={MajorDetail} />
+        <Stack.Screen name="UserDetail" component={UserDetail} />
       </Stack.Navigator>
       {/* <Tab.Navigator>
       <Tab.Screen name="Ana Sayfa" component={Home} options={{tabBarIcon:({color, size})=>(<FontAwesome name="home" size={size} color={color} />)}} /> 

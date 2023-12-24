@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const GenderSelection = ({ onGenderSelected }) => {
-  const [selectedGender, setSelectedGender] = useState(null);
+const GenderSelection = ({ onGenderSelected, genderForUser }) => {
+  const [selectedGender, setSelectedGender] = useState(genderForUser);
 
   const handleGenderSelection = (gender) => {
     setSelectedGender(gender);
@@ -35,7 +35,7 @@ const GenderSelection = ({ onGenderSelected }) => {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
+    justifyContent: 'center', 
     alignItems: 'center',
   },
   buttonContainer: {

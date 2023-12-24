@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, Button, Platform, TextInput, StyleSheet } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-const DatePickerComponent = ({ onDateChange }) => {
-  const [date, setDate] = useState(new Date());
+const DatePickerComponent = ({ onDateChange, dateForUser }) => {
+  const [date, setDate] = useState(new Date(dateForUser));
   const [show, setShow] = useState(false);
 
   const onChange = (event, selectedDate) => {
