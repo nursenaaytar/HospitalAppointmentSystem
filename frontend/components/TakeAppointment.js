@@ -213,7 +213,6 @@ import {
   
         const result = await response.json();
         if (result.isSuccessful) {
-          //navigation.navigate("Plan");
         } else {
           Alert.alert('Hata', result.message);
         }
