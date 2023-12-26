@@ -113,10 +113,15 @@ export function UserDetail({ route }) {
       );
       const result = await response.json();
       if (result.isSuccessful) {
-
         if(user.role != newRole && newRole == "Doctor") {
-          console.log("d");
-          await fetch(
+          console.log("Role: "+ newRole);
+
+          console.log("user_id " + user._id)
+          console.log("newMajor " + newMajor)
+          console.log("newHospital " + newHospital)
+
+
+          const response = await fetch(
             API_BASE_ADRESS + `/doctor/create`,
             {
               method: "POST",
@@ -130,8 +135,12 @@ export function UserDetail({ route }) {
               }),
             }
           );
+          const result = await response.json();
+          console.log(result)
         }else if(user.role == newRole && newRole == "Doctor"){
-          console.log("c")
+          console.log("user_id " + user._id)
+          console.log("user_id " + newMajor)
+          console.log("user_id " + newHospital)
           const res = await fetch(
             API_BASE_ADRESS + `/doctor/update/${doctorId}`,
             {
@@ -147,7 +156,6 @@ export function UserDetail({ route }) {
             }
           );
         }else{
-          console.log("test" + doctorId)
           await fetch(
             API_BASE_ADRESS + `/doctor/delete/${doctorId}`,
             {

@@ -4,6 +4,7 @@ const User = require("./models/user");
 const Hospital = require("./models/hospital");
 const Major = require("./models/major");
 const Doctor = require("./models/doctor");
+const Appointment = require("./models/appointment");
 const app = express();
 
 app.use(express.json());
@@ -58,6 +59,28 @@ app.get("/user/get/:email", async (req, res) => {
 app.get("/user/getall", async (req, res) => {
   try {
     const users = await User.find({});
+
+    if (!users || users.length === 0) {
+      return res
+        .status(404)
+        .json({
+          status: 404,
+          isSuccessful: false,
+          message: "Kullanıcı bulunamadı.",
+        });
+    }
+
+    res.status(200).json({ status: 200, isSuccessful: true, users });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ status: 500, isSuccessful: false, message: err.message });
+  }
+});
+
+app.get("/user/getdoctors", async (req, res) => {
+  try {
+    const users = await User.find({role: "Doctor"});
 
     if (!users || users.length === 0) {
       return res
@@ -355,7 +378,7 @@ app.post("/doctor/create", async (req, res) => {
       majorId,
       hospitalId,
     });
-
+//x
     const savedDoctor = await newDoctor.save();
 
     res.json(savedDoctor);
@@ -433,6 +456,70 @@ app.get("/doctor/check/:userId", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+app.post("/doctor/getbyhospitalandmajor", async (req, res) => {
+  try {
+    const { hospitalId, majorId } = req.body;
+
+    const hospitalExists = await Hospital.findById(hospitalId);
+    const majorExists = await Major.findById(majorId);
+
+    if (!hospitalExists || !majorExists) {
+      return res.status(400).json({ status: 400, isSuccessful: false, message: "Geçersiz hastane veya ana bilim dalı ID'si" });
+    }
+
+    const doctors = await Doctor.find({ hospitalId, majorId })//.populate('userId').populate('hospitalId').populate('majorId');
+
+    res.status(200).json({ status: 200, isSuccessful: true, doctors });
+  } catch (error) {
+    res.status(500).json({ status: 500, isSuccessful: false, message: error.message });
+  }
+});
+
+//#endregion
+
+//#region Appointment
+
+app.post("/appointment/create", async (req, res) => {
+  try {
+    const { doctorId, time, between } = req.body;
+
+    const newAppointment = new Appointment({
+      doctorId,
+      time,
+      between,
+      isFull :false,
+      isCancalled :false,
+      userRequestTime: null,
+      patientId :null,
+      note: "",
+
+    });
+//x
+    const saved = await newAppointment.save();
+
+    res.status(200).json({ status: 200, isSuccessful: true });
+  } catch (error) {
+    res.status(500).json({ status: 500, isSuccessful: false, message: error.message });
+  }
+});
+
+app.post("/appointment/search", async (req, res) => {
+  try {
+    const { doctorId, stDate, endDate } = req.body;
+    console.log(stDate);
+    console.log(endDate);
+    const appointments = await Appointment.find({
+      doctorId,
+      time: { $gte: new Date(stDate), $lt: new Date(endDate) }
+    });
+
+    res.status(200).json({ status: 200, isSuccessful: true, appointments });
+  } catch (error) {
+    res.status(500).json({ status: 500, isSuccessful: false, message: error.message });
+  }
+});
+
 //#endregion
 
 mongoose.set("strictQuery", false);

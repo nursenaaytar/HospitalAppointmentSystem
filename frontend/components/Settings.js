@@ -1,15 +1,34 @@
 import { useNavigation } from '@react-navigation/core'
-import React from 'react'
+import React, {useEffect} from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { auth } from '../auth/Firebase'
-
+import AsyncStorage from '@react-native-async-storage/async-storage'
 export const Settings = () => {
   const navigation = useNavigation()
+  const [name, setName] = React.useState("")
+  const [surname, setSurname] = React.useState("")
+  const [role, setRole] = React.useState("");
+
+  useEffect(() => {
+    const getUserInfo = async () => {
+      try {
+        setName(JSON.parse(await AsyncStorage.getItem("name")));
+        setSurname(JSON.parse(await AsyncStorage.getItem("surname")));
+        setRole(JSON.parse(await AsyncStorage.getItem("role")));
+      } catch (error) {
+        console.error(
+          "AsyncStorage'ten veri çekilirken bir hata oluştu:",
+          error
+        );
+      }
+    };
+    getUserInfo();
+  }, []);
 
   const handleSignOut = () => {
     auth
       .signOut()
-      .then(() => {
+      .then( () => {
         navigation.replace("Login")
       })
       .catch(error => alert(error.message))
@@ -17,7 +36,10 @@ export const Settings = () => {
 
   return (
     <View style={styles.container}>
-      <Text>Email: {auth.currentUser?.email}</Text>
+      <Text style={{fontSize: 15}}>Adınız: {name}</Text>
+      <Text style={{fontSize: 15}}>Soyadınız: {surname}</Text>
+      <Text style={{fontWeight: 700}}>Email: {auth.currentUser?.email}</Text>
+      <Text style={{fontWeight: 700}}>Rol: {role}</Text>
       <TouchableOpacity
         onPress={handleSignOut}
         style={styles.button}

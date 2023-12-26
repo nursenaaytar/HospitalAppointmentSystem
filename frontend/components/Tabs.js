@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Appointment } from './Appointment';
 import { Home } from './Home';
-import { History } from './History';
+import { Plan } from './Plan';
 import { Settings } from './Settings';
 import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -13,12 +13,13 @@ import { MajorSettings } from './MajorSettings';
 import { UserSettings } from './UserSettings';
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import { Entypo } from '@expo/vector-icons'; 
-
+import { TakeAppointment} from './TakeAppointment';
 const Tab = createBottomTabNavigator();
 
 export function Tabs() {
 
   const [userRole, setUserRole] = useState(null);
+  
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -40,20 +41,21 @@ export function Tabs() {
       <Tab.Screen name="Ana Sayfa" component={Home} options={{ tabBarIcon: ({ color, size }) => (<FontAwesome name="home" size={size} color={color} />) }} />
 
       {userRole === "Admin" && (<>
-        <Tab.Screen name="Hastane Bilgileri" component={HospitalSettings} options={{ tabBarIcon: ({ color, size }) => (<FontAwesome5 name="hospital" size={size} color={color} />) }} />
+        <Tab.Screen name="Hastane" component={HospitalSettings} options={{ tabBarIcon: ({ color, size }) => (<FontAwesome5 name="hospital" size={size} color={color} />) }} />
         <Tab.Screen name="Ana Bilim Dalı" component={MajorSettings} options={{ tabBarIcon: ({ color, size }) => (<Entypo name="flow-tree" size={size} color={color} />) }} />
         <Tab.Screen name="Kullanıcılar" component={UserSettings} options={{ tabBarIcon: ({ color, size }) => (<Entypo name="users" size={size} color={color} />) }} />
+        <Tab.Screen name="Plan" component={Plan} options={{ tabBarIcon: ({ color, size }) => (<FontAwesome name="calendar" size={size} color={color} />) }} />
       </>)}
       {userRole === "User" && (
         <>
-          <Tab.Screen name="Randevu Al" component={Appointment} options={{ tabBarIcon: ({ color, size }) => (<AntDesign name="layout" size={size} color={color} />) }} />
-          <Tab.Screen name="Geçmiş" component={History} options={{ tabBarIcon: ({ color, size }) => (<FontAwesome name="history" size={size} color={color} />) }} />
+        <Tab.Screen name="Randevu Al" component={TakeAppointment} options={{ tabBarIcon: ({ color, size }) => (<AntDesign name="layout" size={size} color={color} />) }} />
+          {/* <Tab.Screen name="Randevu Al" component={Appointment} options={{ tabBarIcon: ({ color, size }) => (<AntDesign name="layout" size={size} color={color} />) }} /> */}
         </>
       )}
       {/* {userRole === "Doctor" && (
         <Tab.Screen name="Ayarlar" component={Settings} options={{ tabBarIcon: ({ color, size }) => (<Feather name="settings" size={size} color={color} />) }} />)
       } */}
-      <Tab.Screen name="Ayarlar" component={Settings} options={{ tabBarIcon: ({ color, size }) => (<Feather name="settings" size={size} color={color} />) }} />
+      <Tab.Screen name="Profil" component={Settings} options={{ tabBarIcon: ({ color, size }) => (<Feather name="settings" size={size} color={color} />) }} />
     </Tab.Navigator>
   );
 }

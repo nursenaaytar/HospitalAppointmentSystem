@@ -1,27 +1,40 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Text, View, StyleSheet, Button } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from '@react-navigation/native';
 
 export function Home() {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const getUserInfo = async () => {
-      try {
-        setName(JSON.parse(await AsyncStorage.getItem("name")));
-        setSurname(JSON.parse(await AsyncStorage.getItem("surname")));
-      } catch (error) {
-        console.error(
-          "AsyncStorage'ten veri çekilirken bir hata oluştu:",
-          error
-        );
-      }
-    };
+  useFocusEffect( // geçişlerde refresh
+  useCallback(() => {
     getUserInfo();
-  }, []);
+  }, [])
+);
+
+  useEffect(() => {
+    console.log("UseEffect")
+    getUserInfo();
+    console.log("Name: "+ name);
+    console.log("Surname: "+ surname);
+  }, []); 
+
+  const getUserInfo = async () => {
+    try {
+      await AsyncStorage.getItem("name").then((user) => {console.log("User: "+ user)}).catch((err) => {console.log("Error: "+ err)});
+      console.log("SET YOK : " + await AsyncStorage.getItem("name"));
+      await setName(JSON.parse(await AsyncStorage.getItem("name")));
+      await setSurname(JSON.parse(await AsyncStorage.getItem("surname")));
+    } catch (error) {
+      console.error(
+        "AsyncStorage'ten veri çekilirken bir hata oluştu:",
+        error
+      );
+    }
+  };
 
   return (
     <View style={styles.container}>

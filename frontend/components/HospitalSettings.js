@@ -9,7 +9,6 @@ export function HospitalSettings() {
   const [hospitals, setHospitals] = useState([]);
   const navigation = useNavigation();
 
-
   useFocusEffect( // geçişlerde refresh
   useCallback(() => {
     getHospitals();
@@ -17,7 +16,6 @@ export function HospitalSettings() {
 );
 
   const getHospitals = async () => {
-    console.log("deneme2");
     try {
       const response = await fetch(API_BASE_ADRESS + "/hospital/getall/", {
         method: "GET",
@@ -28,7 +26,7 @@ export function HospitalSettings() {
 
       const result = await response.json();
       if (result.isSuccessful) {
-        setHospitals(prevHospitals => [...result.hospitals]); // Güncelleme
+        setHospitals(prevHospitals => [...result.hospitals]);
       } else {
         console.log("Hata Oluştu:", result.message);
       }

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, Button, Platform, TextInput, StyleSheet } from 'react-native';
+import { View, Text, Button, Platform,  StyleSheet } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-const DatePickerComponent = ({ onDateChange, dateForUser }) => {
+const DatePickerComponent = ({ onDateChange, dateForUser, nameDate, mode }) => {
   const [date, setDate] = useState(new Date(dateForUser));
   const [show, setShow] = useState(false);
 
@@ -27,14 +27,14 @@ const DatePickerComponent = ({ onDateChange, dateForUser }) => {
         <DateTimePicker
           testID="dateTimePicker"
           value={date}
-          mode="date"
+          mode={mode} // time date
           is24Hour={true}
           display="default"
           onChange={onChange}
         />
       )}
       <View style={{marginTop: 10}}>
-        <Button onPress={showDatePicker} title={"Doğum Tarihi Seç: " + date.toLocaleDateString('tr-TR')} />
+        <Button onPress={showDatePicker} title={nameDate + " Tarihi Seç: " + (mode == "time" ? date.getHours('tr-TR') +":" + date.getMinutes('tr-TR'): date.toLocaleDateString('tr-TR') ) } />
       </View>
     </View>
   );

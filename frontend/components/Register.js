@@ -148,7 +148,7 @@ const Register = () => {
           style={styles.input}
           secureTextEntry
         />
-        <DatePicker onDateChange={handleDateChange} />
+        <DatePicker nameDate="Doğum" onDateChange={handleDateChange} dateForUser={new Date()}/>
         <GenderSelection onGenderSelected={handleGenderSelected} />
       </View>
       <View style={styles.buttonContainer}>

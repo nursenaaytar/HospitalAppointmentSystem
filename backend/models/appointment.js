@@ -9,9 +9,13 @@ const appointment = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user',
     },
-    dob: {
+    time: {
         type: Date,
         required: [true, "Please enter a appointment time"]
+    },
+    between: {
+        type: String,
+        required: [true, "Please enter a appointment beetween"]
     },
     userRequestTime: {
         type: Date
