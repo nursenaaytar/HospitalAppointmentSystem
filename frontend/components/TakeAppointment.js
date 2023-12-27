@@ -168,14 +168,6 @@ export function TakeAppointment() {
     }
   };
 
-  const handleCreatePlan = () => {
-    if (major != null && hospital != null && doctor != null) {
-      setActive(true);
-    } else {
-      Alert.alert("Tüm seçimler yapılmalıdır.");
-    }
-  };
-
   const handleSearchAppointment = async () => {
     await getAppointments();
     console.log(appointments.length);

@@ -16,6 +16,7 @@ import { Entypo } from '@expo/vector-icons';
 import { TakeAppointment} from './TakeAppointment';
 import { AppoinmentHistoryDetail } from './AppointmentHistoryDetail';
 import { AppointmentSettings } from './AppointmentSettings';
+import { DoctorAppointment } from './DoctorAppointment';
 const Tab = createBottomTabNavigator();
 
 export function Tabs() {
@@ -54,9 +55,11 @@ export function Tabs() {
         <Tab.Screen name="Randevu Geçmişim" component={AppointmentSettings} options={{ tabBarIcon: ({ color, size }) => (<FontAwesome name="history" size={size} color={color} />) }} />
         </>
       )}
-      {/* {userRole === "Doctor" && (
-        <Tab.Screen name="Ayarlar" component={Settings} options={{ tabBarIcon: ({ color, size }) => (<Feather name="settings" size={size} color={color} />) }} />)
-      } */}
+      {userRole === "Doctor" && (
+        <>
+        <Tab.Screen name="Programım" component={DoctorAppointment} options={{ tabBarIcon: ({ color, size }) => (<FontAwesome name="calendar" size={size} color={color} />)  }} />
+       </>
+      )}
       <Tab.Screen name="Profil" component={Settings} options={{ tabBarIcon: ({ color, size }) => (<Feather name="settings" size={size} color={color} />) }} />
     </Tab.Navigator>
   );

@@ -487,6 +487,22 @@ app.post("/doctor/getbydoctorid", async (req, res) => {
   }
 });
 
+app.post("/doctor/getbyuserid", async (req, res) => {
+  try {
+    const { email, stDate, endDate } = req.body;
+    const userExist = await User.findOne({email : email});
+    const doctorExists = await Doctor.findOne({userId : userExist._id});
+    console.log(doctorExists._id);
+    const appointments = await Appointment.find({
+      doctorId : doctorExists._id,
+      time: { $gte: new Date(stDate), $lt: new Date(endDate) }
+    });
+    console.log(appointments);
+    res.status(200).json({ status: 200, isSuccessful: true, appointments });
+  } catch (error) {
+    res.status(500).json({ status: 500, isSuccessful: false, message: error.message });
+  }
+});
 
 //#endregion
 
