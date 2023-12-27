@@ -14,6 +14,8 @@ import { UserSettings } from './UserSettings';
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import { Entypo } from '@expo/vector-icons'; 
 import { TakeAppointment} from './TakeAppointment';
+import { AppoinmentHistoryDetail } from './AppointmentHistoryDetail';
+import { AppointmentSettings } from './AppointmentSettings';
 const Tab = createBottomTabNavigator();
 
 export function Tabs() {
@@ -49,7 +51,7 @@ export function Tabs() {
       {userRole === "User" && (
         <>
         <Tab.Screen name="Randevu Al" component={TakeAppointment} options={{ tabBarIcon: ({ color, size }) => (<AntDesign name="layout" size={size} color={color} />) }} />
-          {/* <Tab.Screen name="Randevu Al" component={Appointment} options={{ tabBarIcon: ({ color, size }) => (<AntDesign name="layout" size={size} color={color} />) }} /> */}
+        <Tab.Screen name="Randevu Geçmişim" component={AppointmentSettings} options={{ tabBarIcon: ({ color, size }) => (<FontAwesome name="history" size={size} color={color} />) }} />
         </>
       )}
       {/* {userRole === "Doctor" && (

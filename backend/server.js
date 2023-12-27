@@ -536,6 +536,22 @@ app.post("/appointment/search", async (req, res) => {
   }
 });
 
+app.post("/appointment/getbyuserid", async (req, res) => {
+  try {
+    const { userId } = req.body;
+    console.log(userId);
+    const objectIdUserId = new mongoose.Types.ObjectId(userId);
+console.log("aa" + objectIdUserId);
+    const appointments = await Appointment.find({
+      patientId : objectIdUserId,
+    });
+
+    res.status(200).json({ status: 200, isSuccessful: true, appointments });
+  } catch (error) {
+    res.status(500).json({ status: 500, isSuccessful: false, message: error.message });
+  }
+});
+
 //#endregion
 
 mongoose.set("strictQuery", false);

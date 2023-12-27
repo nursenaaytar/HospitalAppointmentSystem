@@ -10,6 +10,7 @@ import {HospitalDetail} from "./components/HospitalDetail";
 import { MajorDetail } from "./components/MajorDetail";
 import { UserDetail } from "./components/UserDetail";
 import { TakeAppointmentDetail } from "./components/TakeAppointmentDetail";
+import { AppoinmentHistoryDetail } from "./components/AppointmentHistoryDetail";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -35,6 +36,7 @@ export default function App() {
         <Stack.Screen name="MajorDetail" component={MajorDetail} />
         <Stack.Screen name="UserDetail" component={UserDetail} />
         <Stack.Screen name="TakeAppointmentDetail" component={TakeAppointmentDetail} />
+        <Stack.Screen name="AppoinmentHistoryDetail" component={AppoinmentHistoryDetail} />
       </Stack.Navigator>
       {/* <Tab.Navigator>
       <Tab.Screen name="Ana Sayfa" component={Home} options={{tabBarIcon:({color, size})=>(<FontAwesome name="home" size={size} color={color} />)}} /> 
