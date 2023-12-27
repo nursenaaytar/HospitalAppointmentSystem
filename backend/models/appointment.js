@@ -17,9 +17,6 @@ const appointment = mongoose.Schema({
         type: String,
         required: [true, "Please enter a appointment beetween"]
     },
-    userRequestTime: {
-        type: Date
-    },
     note: {
         type: String,
     },

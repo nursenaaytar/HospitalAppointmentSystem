@@ -495,12 +495,28 @@ app.post("/appointment/create", async (req, res) => {
       note: "",
 
     });
-//x
+//
     const saved = await newAppointment.save();
 
     res.status(200).json({ status: 200, isSuccessful: true });
   } catch (error) {
     res.status(500).json({ status: 500, isSuccessful: false, message: error.message });
+  }
+});
+
+app.put("/appointment/take", async (req, res) => {
+  try {
+    const { note, _id, patientId } = req.body;
+
+    const updatedAppointment = await Appointment.findByIdAndUpdate(
+      _id,
+      { note, patientId, isFull: true },
+      { new: true } 
+    );
+
+    res.status(200).json({status: 500, isSuccessful: true, updatedAppointment });
+  } catch (error) {
+    res.status(500).json({status: 500, isSuccessful: false, message: error.message });
   }
 });
 
