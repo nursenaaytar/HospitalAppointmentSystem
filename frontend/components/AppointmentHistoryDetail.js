@@ -23,7 +23,8 @@ export function AppoinmentHistoryDetail({ route }) {
       title: screenTitle || "Randevu Geçmişi",
     });
     //getUserByEmail();
-  }, [screenTitle]);
+    getDoctorInfo(appo.doctorId);
+  }, [screenTitle, doctorName, doctorSurname]);
 
   const handleUpdateAppointment = async () => {
     try {
@@ -68,30 +69,8 @@ export function AppoinmentHistoryDetail({ route }) {
 
       const result = await response.json();
       if (result.isSuccessful) {
-        setAppointments(prevAppointments => [...result.appointments]);
-      } else {
-        console.log("Hata Oluştu:", result.message);
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
-
-  const getDoctorHospitalInfo = async (id) => {
-    try {
-      const response = await fetch(API_BASE_ADRESS + "/doctor/gethospitalbydoctorid/", {
-        method: "post",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({
-          doctorId : id,
-        })
-      });
-
-      const result = await response.json();
-      if (result.isSuccessful) {
-        setAppointments(prevAppointments => [...result.appointments]);
+        setDoctorName(result.userExist.name);
+        setDoctorSurname(result.userExist.surname);
       } else {
         console.log("Hata Oluştu:", result.message);
       }
@@ -103,7 +82,8 @@ export function AppoinmentHistoryDetail({ route }) {
   return (
     <>
       <View style={styles.container}>
-      <StyledInput value={"Doktor Adı: " + appo._id} editable={false}/>
+      <StyledInput value={"Doktor Adı: " + doctorName} editable={false}/>
+      <StyledInput value={"Doktor Soyadı: " + doctorSurname} editable={false}/>
           <StyledInput
             value={
               "Randevu Tarihi: " +
@@ -112,7 +92,7 @@ export function AppoinmentHistoryDetail({ route }) {
             editable={false}
           />
           <StyledInput value={"Randevu Saati: " + appo.between} editable={false}/>
-          <StyledInput placeholder={"Randevu notunuz"} value={appo.note} editable={false}/>
+          <StyledInput placeholder={"Randevu notunuz"} value={"Notunuz: " + appo.note} editable={false}/>
         <View style={styles.buttonContainer}>
           <Button
             style={styles.button}

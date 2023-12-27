@@ -478,15 +478,10 @@ app.post("/doctor/getbyhospitalandmajor", async (req, res) => {
 
 app.post("/doctor/getbydoctorid", async (req, res) => {
   try {
-    const { userId } = req.body;
-    console.log(userId);
-    const objectIdUserId = new mongoose.Types.ObjectId(userId);
-console.log("aa" + objectIdUserId);
-    const appointments = await Appointment.find({
-      patientId : objectIdUserId,
-    });
-
-    res.status(200).json({ status: 200, isSuccessful: true, appointments });
+    const { doctorId } = req.body;
+    const doctorExists = await Doctor.findOne({userId : doctorId});
+    const userExist = await User.findById(doctorExists.userId);
+    res.status(200).json({ status: 200, isSuccessful: true, userExist });
   } catch (error) {
     res.status(500).json({ status: 500, isSuccessful: false, message: error.message });
   }
@@ -574,7 +569,7 @@ app.put("/appointment/cancel/:appoId", async (req, res) => {
   const { isFull, isCancalled, patientId } = req.body;
 
   try {
-    const updatedAppo = await Major.findOneAndUpdate(
+    const updatedAppo = await Appointment.findOneAndUpdate(
       { _id: appoId },
       { isFull, isCancalled, patientId },
       { new: true }
