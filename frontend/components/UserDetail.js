@@ -277,7 +277,7 @@ export function UserDetail({ route }) {
             style={styles.input}
             keyboardType="numeric"
           />
-          <DatePicker dateForUser={newDob} onDateChange={handleDateChange} />
+          <DatePicker dateForUser={newDob} onDateChange={handleDateChange} nameDate="Doğum" />
           <GenderSelection
             genderForUser={newGender}
             onGenderSelected={handleGenderSelected}

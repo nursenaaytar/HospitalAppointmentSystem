@@ -36,7 +36,7 @@ export default function App() {
         <Stack.Screen name="MajorDetail" component={MajorDetail} />
         <Stack.Screen name="UserDetail" component={UserDetail} />
         <Stack.Screen name="TakeAppointmentDetail" component={TakeAppointmentDetail} />
-        <Stack.Screen name="AppoinmentHistoryDetail" component={AppoinmentHistoryDetail} />
+        <Stack.Screen name="AppointmentHistoryDetail" component={AppoinmentHistoryDetail} />
       </Stack.Navigator>
       {/* <Tab.Navigator>
       <Tab.Screen name="Ana Sayfa" component={Home} options={{tabBarIcon:({color, size})=>(<FontAwesome name="home" size={size} color={color} />)}} /> 

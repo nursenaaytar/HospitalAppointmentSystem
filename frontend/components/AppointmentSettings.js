@@ -79,12 +79,12 @@ export function AppointmentSettings() {
       renderItem={({ item }) => (
         <TouchableOpacity
         style={[
-          styles.itemContainer,
+          styles.itemContainer, 
           { backgroundColor: item.isCancalled ? "red" : "#0382a9" }
-        ]}
+        ]} 
           onPress={() => handleAppointmentDetail(item)}
         >
-          <Text style={styles.itemText}>{new Date(item.time).toLocaleDateString("tr-TR") + " - " + item.between}</Text>
+          <Text style={styles.itemText}>{"Randevu Tarihi: " + new Date(item.time).toLocaleDateString("tr-TR") + " - Saati: " + item.between}</Text>
           <TouchableOpacity onPress={() => handleAppointmentDetail(item)}>
             <FontAwesome name="info-circle" size={20} color="#fff" />
           </TouchableOpacity>

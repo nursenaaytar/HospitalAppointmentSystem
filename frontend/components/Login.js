@@ -13,7 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_BASE_ADRESS } from "../constants/config";
 
 const Login = () => {
-  const [email, setEmail] = useState("bsari@gmail.com");
+  const [email, setEmail] = useState("mys@hotmail.com");
   const [password, setPassword] = useState("123123");
 
   const navigation = useNavigation();

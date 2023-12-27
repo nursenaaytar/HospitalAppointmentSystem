@@ -1,14 +1,18 @@
 // HospitalDetail.js
 
-import React, { useState, useEffect } from 'react';
-import { View, Text, Button, TextInput, StyleSheet, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { API_BASE_ADRESS } from '../constants/config';
-import StyledInput from './other/StyledInput';
+import React, { useState, useEffect } from "react";
+import { View, Text, Button,  StyleSheet, Alert } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { API_BASE_ADRESS } from "../constants/config";
+import StyledInput from "./other/StyledInput";
 
 export function AppoinmentHistoryDetail({ route }) {
   const { appo } = route.params;
   const [newName, setNewName] = useState(appo.name);
+  const [hospital, setHospital] = useState('');
+  const [major, setMajor] = useState('');
+  const [doctorName, setDoctorName] = useState('');
+  const [doctorSurname, setDoctorSurname] = useState('');
   const navigation = useNavigation();
 
   const { screenTitle } = route.params;
@@ -16,97 +20,109 @@ export function AppoinmentHistoryDetail({ route }) {
   useEffect(() => {
     // Yeni başlığı ayarla
     navigation.setOptions({
-      title: screenTitle || 'Randevu Geçmişi',
+      title: screenTitle || "Randevu Geçmişi",
     });
-    getUserByEmail();
+    //getUserByEmail();
   }, [screenTitle]);
 
-  const handleCreateHospital = async () => {
+  const handleUpdateAppointment = async () => {
     try {
-      const response = await fetch(API_BASE_ADRESS + `/hospital/create`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name: newName }),
-      });
+      const response = await fetch(
+        API_BASE_ADRESS + `/appointment/cancel/${appo._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            isFull: false,
+            patientId: null,
+            isCancalled: false,
+          }),
+        }
+      );
 
       const result = await response.json();
       if (result.isSuccessful) {
-        Alert.alert('Başarılı', 'Hastane eklendi.');
+        Alert.alert("Başarılı", "Randevu iptal edildi.");
         navigation.goBack();
       } else {
-        Alert.alert('Hata', result.message);
+        Alert.alert("Hata", result.message);
       }
     } catch (error) {
-      console.error('Ekleme Hatası:', error);
+      console.error("Güncelleme Hatası:", error);
     }
   };
 
-  const handleUpdateHospital = async () => {
+  const getDoctorInfo = async (id) => {
     try {
-      const response = await fetch(API_BASE_ADRESS + `/hospital/update/${hospital._id}`, {
-        method: 'PUT',
+      const response = await fetch(API_BASE_ADRESS + "/doctor/getbydoctorid/", {
+        method: "post",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-type": "application/json",
         },
-        body: JSON.stringify({ name: newName }),
+        body: JSON.stringify({
+          doctorId : id,
+        })
       });
 
       const result = await response.json();
       if (result.isSuccessful) {
-        Alert.alert('Başarılı', 'Hastane güncellendi.');
-        navigation.goBack();
+        setAppointments(prevAppointments => [...result.appointments]);
       } else {
-        Alert.alert('Hata', result.message);
+        console.log("Hata Oluştu:", result.message);
       }
     } catch (error) {
-      console.error('Güncelleme Hatası:', error);
+      console.log("error", error);
     }
   };
 
-  const handleDeleteHospital = async () => {
+  const getDoctorHospitalInfo = async (id) => {
     try {
-      const response = await fetch(API_BASE_ADRESS + `/hospital/delete/${hospital._id}`, {
-        method: 'DELETE',
+      const response = await fetch(API_BASE_ADRESS + "/doctor/gethospitalbydoctorid/", {
+        method: "post",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          doctorId : id,
+        })
       });
 
       const result = await response.json();
       if (result.isSuccessful) {
-        Alert.alert('Başarılı', 'Hastane silindi.');
-        navigation.goBack();
+        setAppointments(prevAppointments => [...result.appointments]);
       } else {
-        Alert.alert('Hata', result.message);
+        console.log("Hata Oluştu:", result.message);
       }
     } catch (error) {
-      console.error('Silme Hatası:', error);
+      console.log("error", error);
     }
   };
 
   return (
     <>
-        {hospital.name != null ? (
-            <View style={styles.container}>
-      <StyledInput
-        style={styles.input}
-        value={newName}
-        onChangeText={(text) => setNewName(text)}
-      />
-      <View style={styles.buttonContainer}>
-        <Button style={styles.button} title="Güncelle" onPress={handleUpdateHospital} />
-        <Button style={styles.button} title="Sil" onPress={handleDeleteHospital} color="red" />
+      <View style={styles.container}>
+      <StyledInput value={"Doktor Adı: " + appo._id} editable={false}/>
+          <StyledInput
+            value={
+              "Randevu Tarihi: " +
+              new Date(appo.time).toLocaleDateString("tr-TR")
+            }
+            editable={false}
+          />
+          <StyledInput value={"Randevu Saati: " + appo.between} editable={false}/>
+          <StyledInput placeholder={"Randevu notunuz"} value={appo.note} editable={false}/>
+        <View style={styles.buttonContainer}>
+          <Button
+            style={styles.button}
+            title="Randevu İptal"
+            onPress={handleUpdateAppointment}
+            color="red"
+          />
+        </View>
       </View>
-      </View>):             <View style={styles.container}>
-      <StyledInput
-        placeholder="Hastane Adı"
-        icon="add-circle"
-        value={newName}
-        onChangeText={(text) => setNewName(text)}
-      />
-      <View style={styles.buttonContainer}>
-        <Button style={styles.button} title="Ekle" onPress={handleCreateHospital} />
-      </View>
-      </View>}</>
+    </>
   );
 }
 
@@ -114,28 +130,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   headerText: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
   },
   input: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderWidth: 1,
     marginBottom: 20,
     padding: 10,
-    width: '100%',
+    width: "100%",
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
   },
   styledInput: {
-    alignItems: 'center',
-    justifyContent : 'center',
-  }
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });

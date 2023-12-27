@@ -476,6 +476,23 @@ app.post("/doctor/getbyhospitalandmajor", async (req, res) => {
   }
 });
 
+app.post("/doctor/getbydoctorid", async (req, res) => {
+  try {
+    const { userId } = req.body;
+    console.log(userId);
+    const objectIdUserId = new mongoose.Types.ObjectId(userId);
+console.log("aa" + objectIdUserId);
+    const appointments = await Appointment.find({
+      patientId : objectIdUserId,
+    });
+
+    res.status(200).json({ status: 200, isSuccessful: true, appointments });
+  } catch (error) {
+    res.status(500).json({ status: 500, isSuccessful: false, message: error.message });
+  }
+});
+
+
 //#endregion
 
 //#region Appointment
@@ -549,6 +566,35 @@ console.log("aa" + objectIdUserId);
     res.status(200).json({ status: 200, isSuccessful: true, appointments });
   } catch (error) {
     res.status(500).json({ status: 500, isSuccessful: false, message: error.message });
+  }
+});
+
+app.put("/appointment/cancel/:appoId", async (req, res) => {
+  const appoId = req.params.appoId;
+  const { isFull, isCancalled, patientId } = req.body;
+
+  try {
+    const updatedAppo = await Major.findOneAndUpdate(
+      { _id: appoId },
+      { isFull, isCancalled, patientId },
+      { new: true }
+    );
+
+    if (!updatedAppo) {
+      return res
+        .status(404)
+        .json({
+          status: 404,
+          isSuccessful: false,
+          message: "Randevu bulunamadı.",
+        });
+    }
+
+    res.status(200).json({ status: 200, isSuccessful: true, updatedAppo });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ status: 500, isSuccessful: false, message: err.message });
   }
 });
 
